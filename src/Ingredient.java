@@ -1,19 +1,19 @@
-/**
- * Абстрактный класс <<abstract>> Ингредиент.
- * Реализует (implements) интерфейс Элемент.
- */
 public abstract class Ingredient implements Element {
-    private double netMass; // Поле "Масса нетто" из диаграммы
+    private String name;
+    private double netMass;
 
-    public Ingredient(double netMass) {
-        this.netMass = netMass;
+    public Ingredient(String name, double mass) {
+        this.name = name;
+        this.netMass = mass;
     }
 
-    public double getNetMass() {
+    @Override
+    public String getName() {
+        return name;
+    }
+    public double getNetMass()
+    {
         return netMass;
     }
 
-    public void setNetMass(double netMass) {
-        this.netMass = netMass;
-    }
 }

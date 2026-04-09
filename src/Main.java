@@ -7,13 +7,13 @@ public class Main {
     public static void main(String[] args) {
         boolean running = true;
         while (running) {
-            System.out.println("\n--- Система Управления Напитками (CRUD) ---");
-            System.out.println("1. Create: Создать новый напиток (Свой рецепт)");
-            System.out.println("2. Retrieve: Вывести информацию о напитке (Дерево действий)");
-            System.out.println("3. Update: Изменить название напитка");
-            System.out.println("4. Delete: Удалить напиток");
-            System.out.println("5. Показать все напитки");
-            System.out.println("0. Выход");
+            System.out.println("\nСистема Управления Напитками");
+            System.out.println("1.Создать новый напиток");
+            System.out.println("2.Вывести информацию о напитке");
+            System.out.println("3.Изменить название напитка");
+            System.out.println("4.Удалить напиток");
+            System.out.println("5.Показать все напитки");
+            System.out.println("0.Выход");
             System.out.print("Выберите действие: ");
 
             String choice = scanner.nextLine();
@@ -43,29 +43,24 @@ public class Main {
         }
     }
 
-    // [CREATE] Динамическое создание дерева
     private static void createDynamicBeverage() {
         System.out.print("\nВведите название для нового напитка: ");
         String name = scanner.nextLine();
 
-        System.out.println("\n--- Создание корневого действия напитка ---");
+        System.out.println("\nСоздание действия напитка");
         Action rootAction = chooseAction();
 
         if (rootAction == null) {
-            System.out.println("Ошибка выбора корневого действия. Отмена.");
+            System.out.println("Ошибка выбора действия. Отмена.");
             return;
         }
-
-        // Запускаем рекурсивное наполнение корневого действия
         populateAction(rootAction, 1);
 
-        // Создаем напиток с готовым деревом
         Drink beverage = new Drink(name, rootAction);
         repository.create(beverage);
         System.out.println("\nНапиток '" + name + "' успешно создан и сохранен!");
     }
 
-    // РЕКУРСИВНЫЙ метод для наполнения действия элементами (ингредиентами или другими действиями)
     private static void populateAction(Action currentAction, int depth) {
         boolean filling = true;
         String indent = "  ".repeat(depth);
@@ -73,8 +68,8 @@ public class Main {
         while (filling) {
             System.out.println("\n" + indent + "Текущее действие: [" + currentAction.getClass().getSimpleName() + "]");
             System.out.println(indent + "1. Добавить ингредиент");
-            System.out.println(indent + "2. Добавить вложенное действие (Sub-Action)");
-            System.out.println(indent + "0. Завершить наполнение этого действия (Вернуться на уровень выше)");
+            System.out.println(indent + "2. Добавить вложенное действие");
+            System.out.println(indent + "0. Завершить наполнение этого действия");
             System.out.print(indent + "Ваш выбор: ");
 
             String choice = scanner.nextLine();
@@ -84,17 +79,16 @@ public class Main {
                     Ingredient ing = chooseIngredient(indent);
                     if (ing != null) {
                         currentAction.addElement(ing);
-                        System.out.println(indent + "-> Ингредиент добавлен.");
+                        System.out.println(indent + "Ингредиент добавлен.");
                     }
                     break;
                 case "2":
-                    System.out.println(indent + "--- Выбор вложенного действия ---");
+                    System.out.println(indent + "Выбор вложенного действия");
                     Action subAction = chooseAction();
                     if (subAction != null) {
-                        // РЕКУРСИЯ: вызываем этот же метод для нового действия, увеличив глубину
                         populateAction(subAction, depth + 1);
                         currentAction.addElement(subAction);
-                        System.out.println(indent + "-> Вложенное действие добавлено.");
+                        System.out.println(indent + "Вложенное действие добавлено.");
                     }
                     break;
                 case "0":
@@ -106,28 +100,32 @@ public class Main {
         }
     }
 
-    // Вспомогательный метод выбора действия
     private static Action chooseAction() {
         System.out.println("Доступные действия:");
-        System.out.println("1. Добавить (Add)\n2. Вскипятить (Boil)\n3. Перемолоть (Grind)");
-        System.out.println("4. Перемешать (Mix)\n5. Пролить (Pour)\n6. Взбить (Whip)");
+        System.out.println("1. Добавить\n2. Вскипятить\n3. Перемолоть");
+        System.out.println("4. Перемешать\n5. Пролить\n6. Взбить");
         System.out.print("Выберите номер действия: ");
 
         String choice = scanner.nextLine();
         switch (choice) {
-            case "1": return new Add();
-            case "2": return new Boil();
-            case "3": return new Grind();
-            case "4": return new Mix();
-            case "5": return new Pour();
-            case "6": return new Whip();
+            case "1":
+                return new Add();
+            case "2":
+                return new Boil();
+            case "3":
+                return new Grind();
+            case "4":
+                return new Mix();
+            case "5":
+                return new Pour();
+            case "6":
+                return new Whip();
             default:
                 System.out.println("Неизвестное действие.");
                 return null;
         }
     }
 
-    // Вспомогательный метод выбора ингредиента
     private static Ingredient chooseIngredient(String indent) {
         System.out.println(indent + "Доступные ингредиенты:");
         System.out.println(indent + "1. Вода\n" + indent + "2. Кофейное зерно\n" + indent + "3. Сироп\n" + indent + "4. Молоко\n" + indent + "5. Лёд");
@@ -144,18 +142,22 @@ public class Main {
         }
 
         switch (choice) {
-            case "1": return new Water(mass);
-            case "2": return new CoffeeBean(mass);
-            case "3": return new Syrup(mass);
-            case "4": return new Milk(mass);
-            case "5": return new Ice(mass);
+            case "1":
+                return new Water(mass);
+            case "2":
+                return new CoffeeBean(mass);
+            case "3":
+                return new Syrup(mass);
+            case "4":
+                return new Milk(mass);
+            case "5":
+                return new Ice(mass);
             default:
                 System.out.println(indent + "Неизвестный ингредиент.");
                 return null;
         }
     }
 
-    // [RETRIEVE] Вывод дерева
     private static void retrieveBeverage() {
         System.out.print("Введите название напитка для поиска: ");
         String name = scanner.nextLine();
@@ -169,7 +171,6 @@ public class Main {
         }
     }
 
-    // [UPDATE]
     private static void updateBeverage() {
         System.out.print("Введите старое название напитка: ");
         String oldName = scanner.nextLine();
@@ -186,7 +187,6 @@ public class Main {
         }
     }
 
-    // [DELETE]
     private static void deleteBeverage() {
         System.out.print("Введите название напитка для удаления: ");
         String name = scanner.nextLine();
@@ -205,19 +205,19 @@ public class Main {
         }
     }
 
-    // Обход дерева для вывода
     private static void printTree(Element element, int depth) {
         String indent = "  ".repeat(depth);
 
         if (element instanceof Action) {
             Action action = (Action) element;
-            System.out.println(indent + "└─ [Действие] " + action.getClass().getSimpleName());
+            System.out.println(indent + "-- [Действие] " + action.getName());
+
             for (Element child : action.getElements()) {
                 printTree(child, depth + 1);
             }
         } else if (element instanceof Ingredient) {
             Ingredient ingredient = (Ingredient) element;
-            System.out.println(indent + "   └─ [Ингредиент] " + ingredient.getClass().getSimpleName() +
+            System.out.println(indent + "   -- [Ингредиент] " + ingredient.getName() +
                     " (Масса: " + ingredient.getNetMass() + ")");
         }
     }

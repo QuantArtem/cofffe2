@@ -1,3 +1,5 @@
 public class CoffeeBean extends Ingredient {
-    public CoffeeBean(double netMass) { super(netMass); }
+    public CoffeeBean(double mass) {
+        super("Кофейные зёрна", mass);
+    }
 }

@@ -1,3 +1,5 @@
 public class Milk extends Ingredient {
-    public Milk(double netMass) { super(netMass); }
+    public Milk(double mass) {
+        super("Молоко", mass);
+    }
 }

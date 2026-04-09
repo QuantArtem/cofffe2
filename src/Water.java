@@ -1,3 +1,5 @@
 public class Water extends Ingredient {
-    public Water(double netMass) { super(netMass); }
+    public Water(double mass) {
+        super("Вода", mass);
+    }
 }
